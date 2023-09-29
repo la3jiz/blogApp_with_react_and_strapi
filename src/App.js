@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/home";
+import Content from "./pages/content";
+import useFetch from "./hooks/useFetch";
 
-function App() {
+export default function App() {
+
+  let {loading, data, error} =useFetch('http://localhost:1337/api/blogs?populate=*')
+  if(loading) return <p>Loading...</p>
+  if(error) return <p>Error!</p>
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home blogs={data?data:""}/>}></Route>
+        <Route path="/blog/:id" element={<Content blogs={data?data:""}/>}></Route>
+      </Routes>
+      </Router>
     </div>
   );
 }
-
-export default App;
